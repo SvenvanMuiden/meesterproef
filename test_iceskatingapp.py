@@ -1,38 +1,34 @@
+import unittest
+from datetime import date
 from skater import Skater
 from event import Event
 from track import Track
 
 
-# Test to check if the age of a skater is correct based on the date_of_birth
-def test_age_of_skater():
-    raise NotImplementedError()
+class TestSkatingApp(unittest.TestCase):
+
+    def test_age_of_skater(self):
+        skater = Skater(1, "John", "Doe", "USA", "M", "2000-01-01")
+        self.assertEqual(skater.get_age(date(2024, 1, 1)), 24)
+
+    def test_get_events_of_skater(self):
+        skater = Skater(1, "John", "Doe", "USA", "M", "2000-01-01")
+        events = skater.get_events()
+        self.assertIsInstance(events, list)
+
+    def test_get_events_of_track(self):
+        track = Track(1, "Ice Arena", "New York", "USA", False, 10)
+        events = track.get_events()
+        self.assertIsInstance(events, list)
+
+    def test_event_date_conversion(self):
+        event = Event(1, "Championship", 1, "2023-12-25T15:30:00Z", "500m", 90.0, 5, "John Doe", "Sprint")
+        self.assertEqual(event.convert_date("%B %d, %Y"), "December 25, 2023")
+
+    def test_event_duration_conversion(self):
+        event = Event(1, "Championship", 1, "2023-12-25", "500m", 79.0, 5, "John Doe", "Sprint")
+        self.assertEqual(event.convert_duration("%M minutes %S seconds"), "1 minutes 19.0 seconds")
 
 
-# Test to check if the amount of events for a specific skater is returned correctly
-def test_amount_of_events_of_skater():
-    raise NotImplementedError()
-
-
-# Test to check if the amount of events for a specific track is returned correctly
-def test_amount_of_events_of_track():
-    raise NotImplementedError()
-
-
-# Test to check if the returned date matches the specified format for that event date
-def test_event_date_conversion():
-    raise NotImplementedError()
-
-
-# Test to check if the duration is converted from 1H19 to the specified format
-def test_event_duration_conversion():
-    raise NotImplementedError()
-
-
-# Test to check the amount of skaters on a specified event
-def test_amount_of_skaters_on_event():
-    raise NotImplementedError()
-
-
-# Test to validate if the given track of a specified event is correct
-def test_track_on_event():
-    raise NotImplementedError()
+if __name__ == '__main__':
+    unittest.main()

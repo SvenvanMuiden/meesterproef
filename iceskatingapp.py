@@ -3,14 +3,11 @@ import sqlite3
 import sys
 import os
 
-# Removed unused imports
-# from skater import Skater
-# from track import Track
-# from event import Event
 
 def load_json(file_name):
     with open(file_name, 'r') as file:
         return json.load(file)
+
 
 def create_tables(cursor):
     cursor.execute('''
@@ -33,7 +30,7 @@ def create_tables(cursor):
             outdoor BOOLEAN,
             altitude INTEGER
         )
-    ''')  # Removed the trailing comma after altitude INTEGER
+    ''')  
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS events (
@@ -59,15 +56,6 @@ def create_tables(cursor):
         )
     ''')
 
-def parse_duration(time_str):
-    """Convert a time string in mm:ss.mmm format to total seconds."""
-    try:
-        minutes, seconds = time_str.split(':')
-        total_seconds = int(minutes) * 60 + float(seconds)
-        return total_seconds
-    except ValueError:
-        print(f"Error parsing duration: {time_str}")
-        return None
 
 def initialize_database(conn, json_data):
     cursor = conn.cursor()
@@ -79,6 +67,7 @@ def initialize_database(conn, json_data):
 
     conn.commit()
     cursor.close()
+
 
 def populate_database(cursor, json_data):
     processed_skaters = set()
@@ -113,11 +102,10 @@ def populate_database(cursor, json_data):
                 event['distance']['distance'],
                 duration_str,
                 event['distance']['lapCount'],
-                winner_id,  # ID of the winning skater, now as INTEGER
+                winner_id,
                 event['category']
             )
         )
-
         for result in event['results']:
             skater = result['skater']
             if skater['id'] not in processed_skaters:
@@ -144,6 +132,7 @@ def populate_database(cursor, json_data):
                 )
             )
 
+
 def main():
     db_path = 'iceskatingapp.db'
     json_file = 'events.json'
@@ -162,6 +151,6 @@ def main():
     initialize_database(conn, json_data)
     conn.close()
 
+
 if __name__ == "__main__":
     main()
-

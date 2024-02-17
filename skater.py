@@ -15,10 +15,21 @@ class Skater:
             age -= 1
         return age
 
-    def get_events(self):
-        # This method will depend on how event data is linked to skaters in your application
-        # For example, it might involve querying a database or accessing a data structure
-        pass
+    def get_events(self) -> list:
+        from event import Event
+        import sqlite3
+        conn = sqlite3.connect('iceskatingapp.db')
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT e.id, e.name, e.track_id, e.date, e.distance, e.duration, e.laps, e.winner, e.category
+                FROM events e
+                INNER JOIN event_skaters es ON e.id = es.event_id
+                WHERE es.skater_id = ?
+            ''', (self.id,))
+            event_rows = cursor.fetchall()
+
+        return [Event(*row) for row in event_rows]
 
     def __repr__(self) -> str:
         return "{}({})".format(type(self).__name__, ", ".join([f"{key}={value!s}" for key, value in self.__dict__.items()]))
